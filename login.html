@@ -1,0 +1,42 @@
+<script src="js/login.js"></script>
+<div class="container">
+    <div class="page-header">
+        <h1>用户登录</h1>
+    </div>
+    <form class="form-horizontal" method="post">
+        <div class="form-group">
+            <div class="col-sm-6">
+                <input type="text" class="form-control" placeholder="用户名/邮箱" id="loginUser" name="loginUser" required minlength="3" maxlength="10">
+            </div>
+        </div>
+        <div class="form-group">
+			<div class="col-sm-6">
+				<input class="form-control" placeholder="密码" id="loginPass"
+					type="password" name="loginPass" 
+					required minlength="3" maxlength="10"/>
+			</div>
+		</div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="vercode" name="vercode" placeholder="验证码" required pattern="\w{6}">
+                    <span class="input-group-addon" id="basic-addon2">
+                        验证码：<img src="auth.jpg" alt="验证码" id="d" name="d">
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified" role="group" aria-label="...">
+                    <div class="btn-group" role="group">
+                        <button type="submit" id="loginBtn" class="btn btn-success">
+                            <span class="glyphicon glyphicon-log-in"></span>
+                            &nbsp;登录
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

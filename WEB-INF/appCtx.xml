@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Spring配置文件的根元素，并指定Schema信息 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task.xsd">
+	
+	<!-- 配置Hibernate的局部事务管理器，使用HibernateTransactionManager类 -->
+	<!-- 该类实现PlatformTransactionManager接口，是针对Hibernate的特定实现 -->
+	<!-- 配置HibernateTransactionManager时需要依注入SessionFactory的引用 -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory" />
+		
+	<!-- 定义JavaMailSenderImpl，它用于发送邮件 指定发送邮件的SMTP服务器地址， 指定登录邮箱的用户名、密码 -->
+	<bean id="mailSender"
+		class="org.springframework.mail.javamail.JavaMailSenderImpl"
+		p:host="smtp.163.com"
+		p:username="yzljj87627"
+		p:password="lancelino54613">
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.timeout">25000</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 定义SimpleMailMessage Bean，它代表了一份邮件 指定发件人地址，指定邮件标题 -->
+	<bean id="mailMessage"
+		class="org.springframework.mail.SimpleMailMessage"
+		p:from="yzljj87627@163.com"
+		p:subject="竞价通知" />
+	<!-- 配置业务逻辑组件 , 为业务逻辑组件注入所需的DAO组件 -->
+	<bean id="auctionService"
+		class="org.crazyit.auction.service.impl.AuctionServiceImpl"
+		p:userDao-ref="auctionUserDao"
+		p:bidDao-ref="bidDao"
+		p:itemDao-ref="itemDao"
+		p:kindDao-ref="kindDao"
+		p:stateDao-ref="stateDao"
+		p:mailSender-ref="mailSender"
+		p:message-ref="mailMessage" />
+	
+	<!-- 定义执行任务调度的线程池 -->
+	<task:scheduler id="myScheduler" pool-size="20"/>
+	<!-- 对指定Bean的指定方法执行实际的调度 -->
+	<task:scheduled-tasks scheduler="myScheduler">
+	    <task:scheduled ref="auctionService" method="updateWiner" 
+	    	fixed-delay="86400000"/>
+	</task:scheduled-tasks>
+
+	<!-- 配置事务切面Bean,指定事务管理器 -->
+	<tx:advice id="txAdvice"
+		transaction-manager="transactionManager">
+		<!-- 用于配置详细的事务语义 -->
+		<tx:attributes>
+			<!-- 所有以'get'开头的方法是read-only的 -->
+			<tx:method name="get*" read-only="true" timeout="8"/>
+			<!-- 其他方法使用默认的事务设置 -->
+			<tx:method name="*" timeout="5"/>
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<!-- 配置一个切入点，匹配指定包下所有以Impl结尾的类执行的所有方法 -->
+		<aop:pointcut id="auctionPc"
+			expression="execution(* org.crazyit.auction.service.impl.*Impl.*(..))" />
+		<!-- 指定在auctionPc切入点应用txAdvice事务切面 -->
+		<aop:advisor advice-ref="txAdvice"
+			pointcut-ref="auctionPc" />		
+	</aop:config>
+</beans>

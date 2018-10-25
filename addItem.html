@@ -1,0 +1,59 @@
+<script src="js/addItem.js"></script>
+<div class="container">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h4 class="panel-title">添加物品</h4>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">物品名:</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="name" name="name" minlength="2" maxlength="10" required>
+                    </div>
+                    <label for="price" class="col-sm-2 control-label">起拍价格：</label>
+                    <div class="col-sm-4">
+                        <input type="number" min="0" class="form-control" id="initPrice" name="initPrice" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="author" class="col-sm-2 control-label">有效时间：</label>
+                    <div class="col-sm-4">
+                        <select name="avail" id="avail" class="form-control">
+                            <option value="1" selected="selected">一天</option>
+                            <option value="2">二天</option>
+							<option value="3">三天</option>
+							<option value="4">四天</option>
+							<option value="5">五天</option>
+							<option value="7">一个星期</option>
+							<option value="30">一个月</option>
+							<option value="365">一年</option>
+                        </select>
+                    </div>
+                    <label for="categoryId" class="col-sm-2 control-label">物品种类：</label>
+                    <div class="col-sm-4">
+                        <select name="kind" id="kind" class="form-control"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="desc" class="col-sm-2 control-label">物品描述：</label>
+                    <div class="col-sm-4">
+                        <textarea type="text" class="form-control" id="desc" name="desc"
+							minlength="20" required rows="4"></textarea>
+                    </div>
+                    <label for="remark" class="col-sm-2 control-label">物品备注：</label>
+                    <div class="col-sm-4">
+                        <textarea type="text" class="form-control" id="remark"
+							name="remark" minlength="20" required rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" id="addItem" class="btn btn-success">添加</button>
+                        <button id="cancel" role="button" class="btn btn-danger">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

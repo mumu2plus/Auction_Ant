@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="auction" basedir="." default="help">
+	<property name="src" value="src"/>
+	<property name="dest" value="classes"/>
+
+	<path id="classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar"/>
+		</fileset>
+		<pathelement path="${dest}"/>
+	</path>
+
+	<!-- 显示帮助信息 -->
+	<target name="help" description="Echo help information">
+		<echo message="There are such targets as below:"/>
+		<echo message="----------------------------------"/>
+		<echo message=" 1.help : Echo help information"/>
+		<echo message=" 2.compile : Compile all source code"/>
+		<echo message="***************************"/>
+	</target>
+
+	<!-- 编译src目录下所有源代码 -->
+	<target name="compile" description="Compile all source code">
+		<delete dir="${dest}"/>
+		<mkdir dir="${dest}"/>
+		<copy todir="${dest}">
+			<fileset dir="${src}">
+				<exclude name="**/*.java"/>
+			</fileset>		
+		</copy>
+		<javac destdir="${dest}" debug="true" includeantruntime="yes"
+			deprecation="false" optimize="false" failonerror="true"
+			encoding="utf-8">
+			<compilerarg value="-Xlint:unchecked"/>
+			<src path="${src}"/>
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+
+</project>
